@@ -1,17 +1,18 @@
 const { Sequelize } = require("sequelize");
 const { createDatabase } = require("./database");
 const RepositoryModel = require("./repository");
+const { join } = require('path');
 const { URL } = require('url');
 
-const databaseLocation =
+const databasePath =
   process.env.DATABASE_LOCATION ||
   (process.env.NODE_ENV === 'production'
     ? '/opt/user-walkthroughs'
-    : '..');
+    : join(__dirname, '..'));
 
 const databaseName = "webapp";
 
-const database = createDatabase(databaseLocation, databaseName);
+const database = createDatabase(databaseName, databasePath);
 const repository = RepositoryModel(database, Sequelize);
 
 /**
