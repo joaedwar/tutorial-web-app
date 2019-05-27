@@ -245,11 +245,21 @@ function loadAllWalkthroughs(location) {
   }
 
   walkthroughs.length = 0;
-  return resolveWalkthroughLocations(locations)
+  return injectUserWalkthroughRepos(locations)
+    .then(l => resolveWalkthroughLocations(l))
     .then(l => Promise.all(l.map(lookupWalkthroughResources)))
     .then(l => l.reduce((a, b) => a.concat(b)), []) // flatten walkthrough arrays of all locations
     .then(l => l.map(importWalkthroughAdoc))
     .then(l => Promise.all(l));
+}
+
+function injectUserWalkthroughRepos(locations) {
+  return new Promise((resolve, reject) => {
+    return repository.findAll().then(repos => {
+      repos.forEach(({ url }) => locations.push(url));
+      return resolve(locations);
+    }).catch(reject);
+  });
 }
 
 /**
