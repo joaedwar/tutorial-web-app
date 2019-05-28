@@ -217,9 +217,6 @@ app.get('/walkthroughs/:walkthroughId/files/*', (req, res) => {
 
 // Reload each walkthrough. This will clone any repo walkthroughs.
 app.post('/sync-walkthroughs', (_, res) => {
-  if (process.env.NODE_ENV === 'production') {
-    return res.json(walkthroughs);
-  }
   loadAllWalkthroughs(walkthroughLocations)
     .then(() => {
       res.json(walkthroughs);
